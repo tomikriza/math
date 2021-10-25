@@ -9,6 +9,7 @@ namespace MatrixLibrary
 
     Matrix Sum(Matrix A, Matrix B);
     
+    Matrix Multiply(Matrix A, Matrix B);
 
 }
 #endif
