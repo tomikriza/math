@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/include/definitions/MatrixDefinitions.h
+iostream
+-
+vector
+-
+
+/home/tomikriza/dev/math/src/MatrixLibrary.cpp
+include/MatrixLibrary.h
+/home/tomikriza/dev/math/src/include/MatrixLibrary.h
+include/utils/MatrixUtils.h
+/home/tomikriza/dev/math/src/include/utils/MatrixUtils.h
+
+/home/tomikriza/dev/math/src/include/MatrixLibrary.h
+MatrixDefinitions.h
+/home/tomikriza/dev/math/src/include/MatrixDefinitions.h
+
+/home/tomikriza/dev/math/src/include/utils/MatrixUtils.h
+MatrixDefinitions.h
+/home/tomikriza/dev/math/src/include/utils/MatrixDefinitions.h
+

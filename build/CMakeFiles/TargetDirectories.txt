@@ -1,0 +1,4 @@
+/home/tomikriza/dev/math/build/CMakeFiles/rebuild_cache.dir
+/home/tomikriza/dev/math/build/CMakeFiles/edit_cache.dir
+/home/tomikriza/dev/math/build/CMakeFiles/matrix.dir
+/home/tomikriza/dev/math/build/CMakeFiles/matrix-library.dir
