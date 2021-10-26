@@ -23,5 +23,9 @@ namespace MatrixLibrary
 
     double Det(Matrix A);
 
+    bool isInvertable(Matrix A);
+
+    Matrix Inverse(Matrix A);
+
 }
 #endif

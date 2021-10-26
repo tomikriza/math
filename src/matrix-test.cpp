@@ -64,5 +64,12 @@ int main()
     std::cout << "\n\nDeterminanta matrice A1: ";
     std::cout << MatrixLibrary::Det(A1) << "\n";
 
+    std::cout << "\nInverz: \n";
+    MatrixLibrary::Matrix A2 = MatrixLibrary::Matrix({{1, 2, 3},
+                                                      {2, -1, -1},
+                                                      {1, 3, 4}});
+
+    MatrixLibrary::Inverse(A2).printMatrix();
+
     return 0;
 }

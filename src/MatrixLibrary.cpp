@@ -219,4 +219,47 @@ namespace MatrixLibrary
         }
     }
 
+    bool isInvertable(Matrix A)
+    {
+        if (Det(A) != 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    Matrix Inverse(Matrix A)
+    {
+        if (isInvertable(A))
+        {
+            std::vector<std::vector<double>> table;
+            int sign;
+            for (int row_idx = 0; row_idx < A.dim.rows; row_idx++)
+            {
+                if (row_idx % 2 == 0)
+                {
+                    sign = 1;
+                }
+                else
+                {
+                    sign = -1;
+                }
+                std::vector<double> row;
+                for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
+                {
+                    row.push_back(sign * Minor(A, row_idx, col_idx));
+                    sign = -sign;
+                }
+                table.push_back(row);
+            }
+            return Transpose(Multiply(1 / Det(A), Matrix(table)));
+        }
+        else
+        { // TODO Deal with this scenario
+            return Eye(A.dim.rows);
+        }
+    }
 }
