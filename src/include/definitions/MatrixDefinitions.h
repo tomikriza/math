@@ -14,7 +14,6 @@ namespace MatrixLibrary
     class Matrix
     {
     public:
-        Matrix(int row_dim, int col_dim);
         Matrix(std::vector<std::vector<double>>table);
 
         double getElement(int row_idx, int col_idx);

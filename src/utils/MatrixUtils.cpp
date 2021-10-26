@@ -37,4 +37,30 @@ namespace MatrixLibrary::Utils
         }
         return result;
     }
+
+    Matrix removeRow(Matrix A, int row_idx)
+    {
+        A.dim.rows -= 1;
+        A.data.erase(A.data.begin() + row_idx);
+
+        return A;
+    }
+
+    Matrix removeColumn(Matrix A, int col_idx)
+    {
+        A.dim.cols -=1;
+        for(int row_idx = 0; row_idx<A.dim.rows; row_idx++)
+        {
+            A.data[row_idx].erase(A.data[row_idx].begin() + col_idx);
+        }
+
+        return A;
+    }
+
+    Matrix removeRowAndColumn(Matrix A, int row_idx, int col_idx)
+    {
+        return removeColumn(removeRow(A,row_idx),col_idx);
+    }
+    
+
 }

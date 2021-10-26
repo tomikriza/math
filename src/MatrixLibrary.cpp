@@ -4,18 +4,25 @@
 namespace MatrixLibrary
 {
 
-    Matrix::Matrix(int row_dim, int col_dim)
+    Matrix Zeros(int row_dim, int col_dim)
     {
-        dim.rows = row_dim;
-        dim.cols = col_dim;
-
         std::vector<double> row;
-        row.assign(dim.cols, 0);
-
-        data.assign(dim.rows, row);
+        std::vector<std::vector<double>> table;
+        row.assign(col_dim, 0);
+        table.assign(row_dim, row);
+        return Matrix(table);
     }
 
-    Matrix::Matrix(std::vector<std::vector<double>>table)
+    Matrix Ones(int row_dim, int col_dim)
+    {
+        std::vector<double> row;
+        std::vector<std::vector<double>> table;
+        row.assign(col_dim, 1);
+        table.assign(row_dim, row);
+        return Matrix(table);
+    }
+
+    Matrix::Matrix(std::vector<std::vector<double>> table)
     { //TODO - Check if table is valid
         dim.rows = table.size();
         dim.cols = table[0].size();
@@ -41,7 +48,7 @@ namespace MatrixLibrary
     std::vector<double> Matrix::getColumn(int col_idx)
     {
         std::vector<double> column;
-        for (int i = 0; i < dim.cols; i++)
+        for (int i = 0; i < dim.rows; i++)
         {
             column.push_back(data[i][col_idx]);
         }
@@ -64,6 +71,26 @@ namespace MatrixLibrary
         }
     }
 
+    bool areEqual(Matrix A, Matrix B)
+    {
+        if (!Utils::MatchingDimensions(A, B))
+        {
+            return false;
+        }
+
+        for (int row_idx = 0; row_idx < A.dim.rows; row_idx++)
+        {
+            for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
+            {
+                if (A.data[row_idx][col_idx] != B.data[row_idx][col_idx])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     void Matrix::printMatrix()
     {
         std::cout << "-----------------Matrix print------------------\n";
@@ -84,7 +111,7 @@ namespace MatrixLibrary
 
     Matrix Eye(int size)
     {
-        Matrix M = Matrix(size, size);
+        Matrix M = Zeros(size, size);
 
         for (int row_idx = 0; row_idx < size; row_idx++)
         {
@@ -98,39 +125,98 @@ namespace MatrixLibrary
     {
         if (Utils::MatchingDimensions(A, B))
         {
-            Matrix Result = Matrix(A.dim.rows, A.dim.cols);
-            for (int row_idx = 0; row_idx < Result.dim.rows; row_idx++)
+            std::vector<std::vector<double>> table;
+            for (int row_idx = 0; row_idx < A.dim.rows; row_idx++)
             {
-                for (int col_idx = 0; col_idx < Result.dim.cols; col_idx++)
+                std::vector<double> row;
+                for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
                 {
-                    Result.data[row_idx][col_idx] = A.data[row_idx][col_idx] + B.data[row_idx][col_idx];
+                    row.push_back(A.data[row_idx][col_idx] + B.data[row_idx][col_idx]);
                 }
+                table.push_back(row);
             }
-            return Result;
+            return Matrix(table);
         }
-        return Matrix(1, 1);
+        return Zeros(1, 1); //TODO Change this
     }
 
     Matrix Multiply(Matrix A, Matrix B)
     {
-        std::vector<std::vector<double>> resultData;
+        std::vector<std::vector<double>> table;
         if (A.dim.cols == B.dim.rows)
         {
             for (int row_idx = 0; row_idx < B.dim.rows; row_idx++)
             {
-                std::vector<double> resultRow;
+                std::vector<double> row;
                 for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
                 {
-                    resultRow.push_back(Utils::dotProduct(A.getRow(row_idx), B.getColumn(col_idx)));
+                    row.push_back(Utils::dotProduct(A.getRow(row_idx), B.getColumn(col_idx)));
                 }
-                resultData.push_back(resultRow);
+                table.push_back(row);
             }
         }
-        Matrix Result = Matrix(resultData);
+        return Matrix(table);
+    }
+
+    Matrix Multiply(double scalar, Matrix A)
+    {
+        Matrix Result = A;
+
+        for (int row_idx = 0; row_idx < Result.dim.rows; row_idx++)
+        {
+            for (int col_idx = 0; col_idx < Result.dim.cols; col_idx++)
+            {
+                Result.data[row_idx][col_idx] = Result.data[row_idx][col_idx] * scalar;
+            }
+        }
+
         return Result;
     }
 
+    Matrix Multiply(Matrix A, double scalar)
+    {
+        return Multiply(scalar, A);
+    }
 
+    Matrix Transpose(Matrix A)
+    {
+        std::vector<std::vector<double>> table;
+        for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
+        {
+            table.push_back(A.getColumn(col_idx));
+        }
 
-    
+        return Matrix(table);
+    }
+
+    double Minor(Matrix A, int row_idx, int col_idx)
+    {
+        return Det(Utils::removeRowAndColumn(A, row_idx, col_idx));
+    }
+
+    double Det(Matrix A)
+    {
+        if (!Utils::isSquareMatrix(A))
+        {
+            return 0; //TODO Disable this possibility
+        }
+        else
+        {
+            switch (A.dim.rows)
+            {
+            case 2:
+                return A.data[0][0] * A.data[1][1] - A.data[1][0] * A.data[0][1];
+            default:
+                double result = 0;
+                int sign = 1;
+                for (int col_idx = 0; col_idx < A.dim.cols; col_idx++)
+                {
+                    result += sign * A.data[0][col_idx] * Minor(A, 0, col_idx);
+                    sign = -sign;
+                }
+                return result;
+            }
+        }
+    }
+
 }
